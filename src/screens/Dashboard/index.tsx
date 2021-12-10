@@ -22,6 +22,7 @@ import {
   LoadContainer
 } from './styles';
 import { useFocusEffect } from '@react-navigation/core';
+import { useAuth } from '../../hooks/auth';
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -29,7 +30,7 @@ export interface DataListProps extends TransactionCardProps {
 
 interface HighlightProps {
   amount: string;
-  lastTransaction: string;
+  lastTransaction: string | number;
 }
 interface HighlightData {
   entries: HighlightProps;
@@ -42,22 +43,28 @@ export function Dashboard() {
   const [transactions, setTransactions] = useState<DataListProps[]>([]);
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
   const theme = useTheme();
+  const { user, signOut } = useAuth();
 
   function getLastTransactionDate(
     collection: DataListProps[], 
     type: 'positive' | 'negative'
   ) {
-    const lastTransactions = new Date(Math.max.apply(Math, 
-      collection.filter(
-        (transaction) => transaction.type === type
-      ).map((transaction) => new Date(transaction.date).getTime()
+    const collectionFilttered = collection.filter(
+      (transaction) => transaction.type === type);
+
+    if(collectionFilttered.length === 0)
+      return 0;
+      
+    const lastTransactions = new Date(
+      Math.max.apply(Math, collectionFilttered
+      .map((transaction) => new Date(transaction.date).getTime()
     )));
 
     return `${lastTransactions.getDate()} de ${lastTransactions.toLocaleString('pt-BR', { month: 'long'})}`
   }
 
   async function loadTransactions() {
-    const dataKey = '@gofinances:transactions';
+    const dataKey = `@gofinances:transactions_${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const transactions = response ? JSON.parse(response) : [];
 
@@ -92,7 +99,9 @@ export function Dashboard() {
     setTransactions(transactionsFormatted);
     const lastTransactionsEntries = getLastTransactionDate(transactions, 'positive');
     const lastTransactionsExpensives = getLastTransactionDate(transactions, 'negative');
-    const totalInterval = `01 à ${lastTransactionsExpensives}`
+    const totalInterval = lastTransactionsExpensives === 0 ?
+    'Não há transações' :
+    `01 à ${lastTransactionsExpensives}`
     
     setHighlightData({
       entries: {
@@ -140,13 +149,13 @@ export function Dashboard() {
           <Header>
             <UserWrapper>
               <UserInfo>
-                <Photo source={{ uri: "https://avatars.githubusercontent.com/u/80720221?v=4" }} />
+                <Photo source={{ uri: user.photo }} />
                 <User>
                   <UserGreeting>Olá, </UserGreeting>
-                  <UserName>Davidson</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power"/>
               </LogoutButton>
             </UserWrapper>
@@ -156,19 +165,27 @@ export function Dashboard() {
               type="up"
               title="Entradas"
               amount={highlightData.entries.amount}
-              lastTransaction={`Última entrada dia ${highlightData.entries.lastTransaction}`}
+              lastTransaction={
+                highlightData.entries.lastTransaction === 0 
+                ? 'Não há transações'
+                : `Última entrada dia ${highlightData.entries.lastTransaction}`
+              }
             />
           <HighlightCard 
               type="down"
               title="Saídas"
               amount={highlightData.expensives.amount}
-              lastTransaction={`Última saída dia ${highlightData.expensives.lastTransaction}`}
+              lastTransaction={
+                highlightData.expensives.lastTransaction === 0 
+                ? 'Não há transações'
+                : `Última saída dia ${highlightData.expensives.lastTransaction}`
+              }
             />
           <HighlightCard 
               type="total"
               title="Total"
               amount={highlightData.total.amount}
-              lastTransaction={highlightData.total.lastTransaction}
+              lastTransaction={`${highlightData.total.lastTransaction}`}
             />
           </HighlightCards>
           <Transactions>

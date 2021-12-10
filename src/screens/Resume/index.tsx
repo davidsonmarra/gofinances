@@ -22,6 +22,7 @@ import { categories } from '../../utils/categories';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { ActivityIndicator } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useAuth } from '../../hooks/auth';
 
 export interface TransactionData {
   type: 'positive' | 'negative';
@@ -41,13 +42,13 @@ interface CategoryData {
 }
 
 export function Resume() {
-  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const theme = useTheme();
   
   function handleDataChange(action: 'next' | 'prev') {
-    setIsLoading(true);
     if(action === 'next') 
       setSelectedDate(addMonths(selectedDate, 1));
     
@@ -57,7 +58,8 @@ export function Resume() {
   }
 
   async function loadData() {
-    const dataKey = '@gofinances:transactions';
+    setIsLoading(true);
+    const dataKey = `@gofinances:transactions_${user.id}`;
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
     const expensives = responseFormatted.filter(

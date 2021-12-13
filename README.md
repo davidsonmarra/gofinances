@@ -28,7 +28,11 @@
 
 <h3 id="funcionalidades">Resultado</h3>
 <div align="center">
-  <video autoplay loop alt="Gif do app funcionando" width="300" src="./src/assets/gofinances.mp4">
+  
+
+https://user-images.githubusercontent.com/80720221/145743208-6f7a32fd-fffa-493b-9e3e-a0213348d938.mp4
+
+
 </div>
 
 <h3 id="executar">Como executar</h3>

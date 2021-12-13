@@ -16,7 +16,7 @@
 
 <h3 id="sobre">Sobre</h3>
 <p>Este projeto foi desenvolvido em React Native durante o Ignite da Rocketseat! 🚀</p>
-<p>Essa é uma aplicação de gerenciamente de finanças, onde foi possível treinar mais sobre formulários, navegação, armazenamento interno no dispositivo, contexto e autenticação.</p>
+<p>Essa é uma aplicação de gerenciamento de finanças, onde foi possível treinar mais sobre formulários, navegação, armazenamento interno no dispositivo, contexto e autenticação.</p>
 
 <h3 id="funcionalidades">Funcionalidades</h3>
 <ul>

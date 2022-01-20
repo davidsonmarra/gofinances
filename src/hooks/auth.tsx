@@ -12,7 +12,7 @@ import * as AuthSession from 'expo-auth-session';
 import * as AppleAuthentication from 'expo-apple-authentication';
 
 interface AuthProviderProps {
-  children:  ReactNode
+  children: ReactNode;
 }
 
 interface User {

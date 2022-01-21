@@ -60,8 +60,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           photo: userInfo.picture
         });
       }
-    } catch(error) {
-      throw new Error(error as string);
+    } catch(error: any) {
+      throw new Error(error);
     }
   }
 
@@ -81,8 +81,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           photo: `https://ui-avatars.com/api/?name=${credential.fullName!.givenName!}&length=1`
         });
       }
-    } catch(error) {
-      throw new Error(error as string);
+    } catch(error: any) {
+      throw new Error(error);
     }
   }
 
@@ -90,8 +90,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     setUser({} as User);
     try { 
       await AsyncStorage.removeItem(userStorageKey);
-    } catch(error) {
-      throw new Error(error as string);
+    } catch(error: any) {
+      throw new Error(error);
     }
   }
 
@@ -100,8 +100,8 @@ function AuthProvider({ children }: AuthProviderProps) {
       try {
         if(user.id) 
           await AsyncStorage.setItem(userStorageKey, JSON.stringify(user));
-      } catch(error) {
-        throw new Error(error as string);
+      } catch(error: any) {
+        throw new Error(error);
       }
     }
     saveUser();
@@ -116,8 +116,8 @@ function AuthProvider({ children }: AuthProviderProps) {
           setUser(userLogged);
         }
         setUserStorageLoading(false);
-      } catch(error) {
-        throw new Error(error as string);
+      } catch(error: any) {
+        throw new Error(error);
       }
     }
     loadUserStorageData();

@@ -54,7 +54,7 @@ export function Register() {
   } = useForm({
     resolver: yupResolver(schema)
   });
-  const { navigate } : NavigationProp<ParamListBase> = useNavigation();
+  const navigation : NavigationProp<ParamListBase> = useNavigation();
 
   function handleTransactionTypeSelect(type: 'positive' | 'negative') {
     setTransactionType(type);
@@ -96,7 +96,7 @@ export function Register() {
         key: 'category',
         name: 'Categoria',
       });
-      navigate('Listagem');
+      navigation.navigate('Listagem');
 
     } catch(error) {
       console.log(error);
@@ -141,7 +141,8 @@ export function Register() {
                 isActive={transactionType === 'negative'}
               />
             </TransactionsTypes>
-            <CategorySelectButton 
+            <CategorySelectButton
+              testID='button-category'
               title={category.name}
               onPress={handleOpenSelectCategoryModal}
             />
@@ -151,8 +152,8 @@ export function Register() {
             onPress={handleSubmit(handleRegister)} 
           />
         </Form>
-        <Modal visible={categoryModalOpen}>
-          <CategorySelect 
+        <Modal testID='modal-category' visible={categoryModalOpen}>
+          <CategorySelect
             category={category}
             setCategory={setCategory}
             closeSelectCategory={handleCloseSelectCategoryModal}
